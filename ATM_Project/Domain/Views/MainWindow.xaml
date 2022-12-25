@@ -10,8 +10,11 @@
 
 
 
-        <Button>
-            
+        <Button Width="200"
+                Height="30"
+                Content="Insert Card"
+                Background="Black"
+                Foreground="White">
         </Button>
         
         
