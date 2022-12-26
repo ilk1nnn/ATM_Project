@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ATM_Project.Domain.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,13 @@ namespace ATM_Project
         public MainWindow()
         {
             InitializeComponent();
+            var vm = new MainViewModel();
+            vm.MyTextBox = CardTxtb;
+            vm.MyButton = load_databtn;
+            vm.MoneyTxtb = CashTxtb;
+            vm.Tbtn = TransferMoneybtn;
+            vm.MyTextBlock = FullnameTxtBlock;
+            this.DataContext = vm;
         }
     }
 }

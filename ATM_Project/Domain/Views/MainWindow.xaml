@@ -5,19 +5,66 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ATM_Project"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="600">
+        Title="ATM" Height="450" Width="600"
+        MaxHeight="450" MaxWidth="600">
     <Grid>
 
 
 
         <Button Width="200"
                 Height="30"
+                Margin="0,-350,0,0"
                 Content="Insert Card"
                 Background="Black"
+                Command="{Binding InsertCardCommand}"
                 Foreground="White">
         </Button>
+
+
+        <TextBox Width="300" Height="32"
+                 Margin="0,-250,0,0"
+                 Visibility="Hidden"
+                 FontSize="25"
+                 TextAlignment="Center"
+                 Name="CardTxtb">
+        </TextBox>
+
+        <Button Width="100"
+                Height="30"
+                Margin="0,-150,0,0"
+                Content="Load Data"
+                Background="Black"
+                Foreground="White"
+                Name="load_databtn"
+                Command="{Binding LoadDataCommand}"
+                Visibility="Hidden"
+                >
+        </Button>
+
+        
+        <TextBlock  Name="FullnameTxtBlock" Visibility="Visible" Foreground="Black" FontSize="25" Background="White" TextAlignment="Center" Width="600" Height="100" Margin="0,0,0,0"></TextBlock>
+
+
+        <TextBox Width="120"
+                 Height="50"
+                 Margin="-200,200,0,0"
+                 Name="CashTxtb"
+                 TextAlignment="Center"
+                 FontSize="30"></TextBox>
+
+
+        <Button Width="200"
+                Command="{Binding TransferMoneyCommand}"
+                Height="35"
+                Background="Black"
+                Foreground="White"
+                Content="Transfer Money"
+                FontSize="20"
+                Name="TransferMoneybtn"
+                Margin="200,200,0,0"></Button>
         
         
         
+
     </Grid>
 </Window>

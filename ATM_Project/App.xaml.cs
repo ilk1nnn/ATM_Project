@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ATM_Project.DataAccess.Abstractions;
+using ATM_Project.DataAccess.Concreates;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +15,13 @@ namespace ATM_Project
     /// </summary>
     public partial class App : Application
     {
+
+        public static IUnitOfWork DB;
+        public App()
+        {
+            DB = new UnitOfWork();
+
+        }
+
     }
 }

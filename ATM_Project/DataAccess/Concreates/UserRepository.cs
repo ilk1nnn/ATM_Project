@@ -51,7 +51,13 @@ namespace ATM_Project.DataAccess.Concreates
 
         public void Update(User data)
         {
-            throw new NotImplementedException();
+            using(var conn = new SqlConnection(ConnectionString))
+            {
+                var query = $@"UPDATE Users
+                              SET Balance = {data.Balance}
+                              WHERE CardNumber = {data.CardNumber}";
+                conn.Query<User>(query).ToList();
+            }    
         }
     }
 }
