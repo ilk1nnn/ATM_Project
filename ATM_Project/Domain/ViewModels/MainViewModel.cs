@@ -101,6 +101,13 @@ namespace ATM_Project.Domain.ViewModels
                 {
                     if (AllUsers[i].CardNumber == MyTextBox.Text)
                     {
+                        User u = new User
+                        {
+                            FullName = AllUsers[i].FullName,
+                            CardNumber = MyTextBox.Text,
+                            Balance = AllUsers[i].Balance,
+                        };
+                        App.DB.UserRepository.Update(u);
                         MyTextBlock.Text = $@"-Info About User-
    Fullname is {AllUsers[i].FullName}
    Balance is {AllUsers[i].Balance} AZN";
@@ -176,7 +183,6 @@ namespace ATM_Project.Domain.ViewModels
                                     };
                                     App.DB.UserRepository.Update(u);
                                 }
-                                notification = $@"Your balance is {AllUsers[j].Balance}";
                                 MessageBox.Show("Transaction finished successfully");
                                 MessageBox.Show(notification);
                                 Tbtn.IsEnabled = true;
