@@ -123,7 +123,7 @@ namespace ATM_Project.Domain.ViewModels
                 using (var m = new Mutex(false, mutexName))
                 {
 
-                    if (!m.WaitOne(100,false))
+                    if (!m.WaitOne(50,false))
                     {
                         MessageBox.Show("Second Instance running");
 
