@@ -73,6 +73,8 @@ namespace ATM_Project.Domain.ViewModels
             set { tbtn = value; OnPropertyChanged(); }
         }
 
+        public RelayCommand RefreshCommand { get; set; }
+
 
         static Mutex mutextObj = new Mutex();
 
@@ -83,6 +85,11 @@ namespace ATM_Project.Domain.ViewModels
             var usersFromDataBase = App.DB.UserRepository.GetAll();
             AllUsers = new ObservableCollection<User>(usersFromDataBase);
 
+            RefreshCommand = new RelayCommand(r =>
+            {
+                var usersFromDataBase2 = App.DB.UserRepository.GetAll();
+                AllUsers = new ObservableCollection<User>(usersFromDataBase2);
+            });
 
 
 
@@ -94,6 +101,7 @@ namespace ATM_Project.Domain.ViewModels
 
             LoadDataCommand = new RelayCommand(l =>
             {
+                MyButton.Content = "Reload Data";
                 MyTextBlock.Visibility = System.Windows.Visibility.Visible;
 
 
@@ -111,9 +119,10 @@ namespace ATM_Project.Domain.ViewModels
                         MyTextBlock.Text = $@"-Info About User-
    Fullname is {AllUsers[i].FullName}
    Balance is {AllUsers[i].Balance} AZN";
+                MyButton.Content = "Load Data";
                     }
-
                 }
+
 
             });
 

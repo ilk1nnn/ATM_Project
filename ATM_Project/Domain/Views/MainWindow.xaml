@@ -62,9 +62,9 @@
                 FontSize="20"
                 Name="TransferMoneybtn"
                 Margin="200,200,0,0"></Button>
-        
-        
-        
+
+
+   
 
     </Grid>
 </Window>
