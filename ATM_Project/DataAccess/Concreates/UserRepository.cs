@@ -4,6 +4,7 @@ using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -58,6 +59,26 @@ namespace ATM_Project.DataAccess.Concreates
                               WHERE CardNumber = {data.CardNumber}";
                 conn.Query<User>(query).ToList();
             }    
+        }
+
+        public void UpdateDataBase()
+        {
+            //string con1 = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Documents and Settings\sam\my documents\visual studio 2010\Projects\WindowsFormsApplication1\WindowsFormsApplication1\Database1.accdb";
+            //string query1 = "SELECT * FROM Table2";
+            //OleDbDataAdapter da1 = new OleDbDataAdapter(query1, con1);
+            //OleDbCommandBuilder cmd = new OleDbCommandBuilder(da1);
+            //da1.Update(database1DataSet2.Table2);
+            //this.database1DataSet2.Table2.Clear(); //clears the dataset
+            //da1.Fill(database1DataSet2.Table2);
+
+            //using(var conn = new SqlConnection(ConnectionString))
+            //{
+            //    string query = "SELECT * FROM Users";
+            //    OleDbDataAdapter da1 = new OleDbDataAdapter(query, ConnectionString);
+            //    OleDbCommandBuilder cmd = new OleDbCommandBuilder(da1);
+            //    da1.Update(datase)
+            //}
+
         }
     }
 }

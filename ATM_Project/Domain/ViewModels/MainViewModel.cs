@@ -78,19 +78,15 @@ namespace ATM_Project.Domain.ViewModels
 
         static Mutex mutextObj = new Mutex();
 
+
+        static object obj = new object();
+
         public MainViewModel()
         {
 
 
             var usersFromDataBase = App.DB.UserRepository.GetAll();
             AllUsers = new ObservableCollection<User>(usersFromDataBase);
-
-            RefreshCommand = new RelayCommand(r =>
-            {
-                var usersFromDataBase2 = App.DB.UserRepository.GetAll();
-                AllUsers = new ObservableCollection<User>(usersFromDataBase2);
-            });
-
 
 
             InsertCardCommand = new RelayCommand(i =>
@@ -101,7 +97,6 @@ namespace ATM_Project.Domain.ViewModels
 
             LoadDataCommand = new RelayCommand(l =>
             {
-                MyButton.Content = "Reload Data";
                 MyTextBlock.Visibility = System.Windows.Visibility.Visible;
 
 
@@ -109,21 +104,26 @@ namespace ATM_Project.Domain.ViewModels
                 {
                     if (AllUsers[i].CardNumber == MyTextBox.Text)
                     {
-                        User u = new User
-                        {
-                            FullName = AllUsers[i].FullName,
-                            CardNumber = MyTextBox.Text,
-                            Balance = AllUsers[i].Balance,
-                        };
-                        App.DB.UserRepository.Update(u);
+
                         MyTextBlock.Text = $@"-Info About User-
    Fullname is {AllUsers[i].FullName}
    Balance is {AllUsers[i].Balance} AZN";
-                MyButton.Content = "Load Data";
                     }
                 }
 
 
+            });
+
+            User user = new User();
+
+            RefreshCommand = new RelayCommand(r =>
+            {
+        
+
+                        MyTextBlock.Text = $@"-Info About User-
+   Fullname is {user.FullName}
+   Balance is {user.Balance} AZN";
+                    
             });
 
 
@@ -132,76 +132,96 @@ namespace ATM_Project.Domain.ViewModels
 
 
                 var money = int.Parse(MoneyTxtb.Text);
-                var ten_money = money / 10;
-
-                string mutexName = "MyMutex";
-
-                using (var m = new Mutex(false, mutexName))
+                if (money >= 10)
                 {
 
-                    if (!m.WaitOne(50,false))
-                    {
-                        MessageBox.Show("Second Instance running");
+                    var ten_money = money / 10;
 
-                    }
-                    else
+                    string mutexName = "MyMutex";
+
+                    using (var m = new Mutex(false, mutexName))
                     {
-                        Tbtn.IsEnabled = false;
-                        var result = 0;
-                        for (int k = 0; k < AllUsers.Count; k++)
+
+                        if (!m.WaitOne(50, false))
                         {
-                            if (AllUsers[k].CardNumber == MyTextBox.Text)
+                            MessageBox.Show("Second Instance running");
+
+                        }
+                        else
+                        {
+                            Tbtn.IsEnabled = false;
+                            var result = 0;
+                            for (int k = 0; k < AllUsers.Count; k++)
                             {
-                                result = AllUsers[k].Balance;
+                                if (AllUsers[k].CardNumber == MyTextBox.Text)
+                                {
+                                    result = AllUsers[k].Balance;
+                                }
                             }
-                        }
-                        for (int i = 0; i < ten_money; i++)
-                        {
-                            result -= 10;
-                            Thread.Sleep(1000);
-                        }
-                        var notification = string.Empty;
-                        for (int j = 0; j < AllUsers.Count; j++)
-                        {
-                            if (AllUsers[j].CardNumber == MyTextBox.Text)
+                            for (int i = 0; i < ten_money; i++)
                             {
-
-                                AllUsers[j].Balance = result;
-                                if (int.Parse(MoneyTxtb.Text) > AllUsers[j].Balance)
-                                {
-                                    MessageBox.Show("Your entered money count is greater than balance.");
-                                    Tbtn.IsEnabled = true;
-
-                                    break;
-                                }
-                                else if (int.Parse(MoneyTxtb.Text) <= 0)
-                                {
-                                    MessageBox.Show("Your entered money count is less than balance or equals to zero(0)");
-                                    Tbtn.IsEnabled = true;
-
-                                    break;
-                                }
-                                else
+                                result -= 10;
+                                Thread.Sleep(1000);
+                            }
+                            var notification = string.Empty;
+                            for (int j = 0; j < AllUsers.Count; j++)
+                            {
+                                if (AllUsers[j].CardNumber == MyTextBox.Text)
                                 {
 
-                                    User u = new User
+                                    AllUsers[j].Balance = result;
+                                    if (int.Parse(MoneyTxtb.Text) > AllUsers[j].Balance)
                                     {
-                                        FullName = AllUsers[j].FullName,
-                                        CardNumber = MyTextBox.Text,
-                                        Balance = AllUsers[j].Balance,
-                                    };
-                                    App.DB.UserRepository.Update(u);
-                                }
-                                MessageBox.Show("Transaction finished successfully");
-                                MessageBox.Show(notification);
-                                Tbtn.IsEnabled = true;
+                                        MessageBox.Show("Your entered money count is greater than balance.");
+                                        Tbtn.IsEnabled = true;
 
+                                        break;
+                                    }
+                                    else if (int.Parse(MoneyTxtb.Text) <= 0)
+                                    {
+                                        MessageBox.Show("Your entered money count is less than balance or equals to zero(0)");
+                                        Tbtn.IsEnabled = true;
+
+                                        break;
+                                    }
+                                    else
+                                    {
+
+                                        lock (obj)
+                                        {
+                                            User u = new User
+                                            {
+                                                FullName = AllUsers[j].FullName,
+                                                CardNumber = MyTextBox.Text,
+                                                Balance = AllUsers[j].Balance,
+                                            };
+                                            App.DB.UserRepository.Update(u);
+                                            user.FullName = u.FullName;
+                                            user.CardNumber = u.CardNumber;
+                                            user.Balance = u.Balance;
+                                        }
+
+                                    }
+                                    MessageBox.Show("Transaction finished successfully");
+                                    //MessageBox.Show(notification);
+                                    Tbtn.IsEnabled = true;
+
+                                }
                             }
+
+
+                            m.ReleaseMutex();
                         }
 
-
-                        m.ReleaseMutex();
                     }
+                }
+                else if (money <= 0)
+                {
+                    MessageBox.Show("Money must be at least 10 AZN");
+                }
+                else
+                {
+                    MessageBox.Show("Minimum money transaction is 10 AZN");
 
                 }
 

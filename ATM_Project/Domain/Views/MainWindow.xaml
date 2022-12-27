@@ -64,7 +64,19 @@
                 Margin="200,200,0,0"></Button>
 
 
-   
+
+        <Button Width="200"
+                Command="{Binding RefreshCommand}"
+                Height="35"
+                Background="Black"
+                Foreground="White"
+                Content="Refresh Money"
+                FontSize="20"
+                Name="RefreshMoney"
+                Margin="200,350,0,0"></Button>
+
+
+
 
     </Grid>
 </Window>

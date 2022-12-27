@@ -13,5 +13,7 @@ namespace ATM_Project.DataAccess.Abstractions
         void DeleteData(int id);
         T Get(int id);
         void Update(T data);
+
+        void UpdateDataBase();
     }
 }
