@@ -118,12 +118,23 @@ namespace ATM_Project.Domain.ViewModels
 
             RefreshCommand = new RelayCommand(r =>
             {
-        
 
-                        MyTextBlock.Text = $@"-Info About User-
-   Fullname is {user.FullName}
+                if (Tbtn.ClickMode == ClickMode.Release)
+                {
+
+                    for (int i = 0; i < AllUsers.Count; i++)
+                    {
+                        if (AllUsers[i].CardNumber == MyTextBox.Text)
+                        {
+
+                            MyTextBlock.Text = $@"-Info About User-
+   Fullname is {AllUsers[i].FullName}
    Balance is {user.Balance} AZN";
-                    
+                        }
+                    }
+                }
+
+
             });
 
 
@@ -145,6 +156,16 @@ namespace ATM_Project.Domain.ViewModels
                         if (!m.WaitOne(50, false))
                         {
                             MessageBox.Show("Second Instance running");
+                            var result = 0;
+                            for (int k = 0; k < AllUsers.Count; k++)
+                            {
+                                if (AllUsers[k].CardNumber == MyTextBox.Text)
+                                {
+                                    result -= money;
+                                    result = AllUsers[k].Balance;
+                                }
+                            }
+                            user.Balance = result;
 
                         }
                         else
@@ -163,6 +184,7 @@ namespace ATM_Project.Domain.ViewModels
                                 result -= 10;
                                 Thread.Sleep(1000);
                             }
+                            user.Balance = result;
                             var notification = string.Empty;
                             for (int j = 0; j < AllUsers.Count; j++)
                             {
@@ -195,22 +217,21 @@ namespace ATM_Project.Domain.ViewModels
                                                 CardNumber = MyTextBox.Text,
                                                 Balance = AllUsers[j].Balance,
                                             };
-                                            App.DB.UserRepository.Update(u);
                                             user.FullName = u.FullName;
                                             user.CardNumber = u.CardNumber;
-                                            user.Balance = u.Balance;
+                                            App.DB.UserRepository.Update(u);
+                                            MessageBox.Show("Transaction finished successfully");
+                                            Tbtn.IsEnabled = true;
                                         }
 
                                     }
-                                    MessageBox.Show("Transaction finished successfully");
                                     //MessageBox.Show(notification);
-                                    Tbtn.IsEnabled = true;
 
                                 }
                             }
-
-
                             m.ReleaseMutex();
+
+
                         }
 
                     }
